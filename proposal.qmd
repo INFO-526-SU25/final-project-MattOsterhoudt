@@ -21,6 +21,17 @@ execute:
 ```{r}
 #| label: load-pkgs
 #| message: false
+
+
+# install and load packages
+if(!require(pacman))
+  install.packages("pacman")
+
+pacman::p_load(tidyverse,
+               janitor)
+
+devtools::install_github("tidyverse/dsbox")
+
 library(tidyverse)
 ```
 
@@ -29,6 +40,13 @@ library(tidyverse)
 ```{r}
 #| label: load-dataset
 #| message: false
+
+team_results <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-26/team-results.csv')
+public_picks <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-26/public-picks.csv')
+
+view(team_results)
+view(public_picks)
+
 ```
 
 A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.
@@ -37,7 +55,7 @@ Make sure to load the data and use inline code for some of this information.
 
 ## Questions
 
-The two questions you want to answer.
+1.  Does a team's overall popularity have any correlation to its success in March Madness?
 
 ## Analysis plan
 
