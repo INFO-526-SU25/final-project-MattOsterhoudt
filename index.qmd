@@ -1,11 +1,11 @@
 ---
 title: "Project Title"
-subtitle: "INFO 526 - Summer 2024 - Final Project"
+subtitle: "INFO 526 - Summer 2025 - Final Project"
 author: 
-  - name: "Team name"
+  - name: "Matt Osterhoudt"
     affiliations:
       - name: "School of Information, University of Arizona"
-description: "Project description"
+description: "This project will examine past NCAA Men's March Madness data in order to develop key insights and predictions utilizing data visualization through plot creation/interpretation"
 format:
    html:
     code-tools: true
@@ -15,8 +15,122 @@ editor: visual
 execute:
   warning: false
   echo: false
+  output: false
 ---
 
-## Abstract
+```{r}
+# set theme for ggplot2
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 14))
 
-Add project abstract here.
+# set width of code output
+options(width = 65)
+
+# set figure parameters for knitr
+knitr::opts_chunk$set(
+  fig.width = 7, # 7" width
+  fig.asp = 0.618, # the golden ratio
+  fig.retina = 3, # dpi multiplier for displaying HTML output on retina
+  fig.align = "center", # center align figures
+  dpi = 300 # higher dpi, sharper image
+)
+# install and load packages
+if(!require(pacman))
+  install.packages("pacman")
+
+pacman::p_load(tidyverse,
+               janitor,
+               ggrepel,
+               ggforce)
+
+devtools::install_github("tidyverse/dsbox")
+
+library(tidyverse)
+```
+
+
+## Introduction
+
+March madness is the NCAA Division 1 annual basketball tournament. It is single-elimination based tournament, and the data I will be using is from 2008-2024. 2020 is not included because of Covid. There are two data sets that will be used: Team Results and Public Picks. Let's start with the simpler one: the Public Picks data set contains the percentage of people who picked the team to win game in the rounds 64, 32, 16, 8, final 4, and finals for the 2024 year.
+
+The second data set is Team Results, and contains data from 2008-2023. This data set contains more variables, such as PAKE (performance against Komputer expectations) and PASE (Performance against seed expectations), along with total historical games teams have played in the tournament as well as how often they have made top 64, 32, 16, 8, 4, finals, and champion. There are also a couple of indicator variables, such as f4percent and champpercent, which notes likelihood of a team getting at least 1 final four or at least 1 championship.
+
+## Question 1: 
+
+**How well does past performance from 2008-2023 correlate with predictions for the 2024 tournament?**
+
+
+## Analysis
+
+```{r}
+#| label: load-dataset
+#| message: false
+
+team_results <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-26/team-results.csv') |>
+  clean_names()
+public_picks <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-26/public-picks.csv') |>
+  clean_names()
+
+# Changes the % into a numeric value by stripping "$"
+public_picks <- public_picks |>
+  mutate(public_f4_percentage = as.numeric(str_remove(f4, "%")))
+
+# Computes the quantile breakpoints
+pase_quantile <- quantile(team_results$pase, probs = c(0.25, 0.50, 0.75), na.rm = TRUE)
+pase_quantile
+
+# Computes historical top 4 percentage and also the quantile labels based on breakpoint.
+team_results <- team_results |>
+  mutate(
+    historical_f4_percentage = f4 / r64 * 100,
+    pase_quant = cut(pase, breaks = c(-Inf, pase_quantile, +Inf), labels = c("Q1", "Q2", "Q3", "Q4"),
+                     right = TRUE
+                     )
+  )
+team_results
+
+# Using a join, selecting teams that appear in public_picks and team results
+combined_data <- team_results |>
+  select(team, historical_f4_percentage, pase_quant) |>
+  inner_join(
+    public_picks |>
+      select(team, public_f4_percentage), by = "team"
+  )
+# Computing delta_f4 
+combined_data <- combined_data |>
+  mutate(
+    delta_f4 = public_f4_percentage - historical_f4_percentage
+  )
+
+combined_data
+
+ggplot(combined_data, aes(x = historical_f4_percentage, y = public_f4_percentage, color = pase_quant)) +
+  geom_point(size = 2, alpha = 0.8) +
+  facet_zoom(
+              xlim = c(0,20), 
+              ylim = c(0,10), 
+              zoom.size = 1) +
+  coord_cartesian(ylim = c(0, 50)) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  scale_x_continuous("Historical Final Four %", labels = scales::percent_format(scale = 1)) +
+  scale_y_continuous("2024 Public-Picks Final Four %", labels = scales::percent_format(scale = 1)) +
+  labs(
+    title = "Past Final Four % vs. Public-Pick % (2025)",
+    color = "PASE Quartile"
+  ) +
+  theme_minimal()
+
+
+ggplot(combined_data, aes(x = pase_quant, y = delta_f4, fill = pase_quant)) +
+  geom_hline(yintercept = 0, color = "gray60") +
+  geom_boxplot(alpha = 0.6, outlier.color = "red") +
+  geom_jitter(width = 0.2, alpha = 0.5, size = 1) +
+  scale_y_continuous("Public F4% – Historical F4%", labels = scales::percent_format(scale = 1)) +
+  labs(
+    title = "Over- or Under-Estimation of Final-Four Chances by PASE Quartile",
+    x = "PASE Quartile"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+
+```

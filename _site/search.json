@@ -32,7 +32,7 @@
     "href": "index.html",
     "title": "Project Title",
     "section": "",
-    "text": "Add project abstract here."
+    "text": "March madness is the NCAA Division 1 annual basketball tournament. It is single-elimination based tournament, and the data I will be using is from 2008-2024. 2020 is not included because of Covid. There are two data sets that will be used: Team Results and Public Picks. Let’s start with the simpler one: the Public Picks data set contains the percentage of people who picked the team to win game in the rounds 64, 32, 16, 8, final 4, and finals for the 2024 year.\nThe second data set is Team Results, and contains data from 2008-2023. This data set contains more variables, such as PAKE (performance against Komputer expectations) and PASE (Performance against seed expectations), along with total historical games teams have played in the tournament as well as how often they have made top 64, 32, 16, 8, 4, finals, and champion. There are also a couple of indicator variables, such as f4percent and champpercent, which notes likelihood of a team getting at least 1 final four or at least 1 championship."
   },
   {
     "objectID": "index.html#abstract",
@@ -124,5 +124,26 @@
     "title": "Project title",
     "section": "Footnotes",
     "text": "Footnotes\n\n\nAnd add footnotes↩︎"
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "Project Title",
+    "section": "",
+    "text": "March madness is the NCAA Division 1 annual basketball tournament. It is single-elimination based tournament, and the data I will be using is from 2008-2024. 2020 is not included because of Covid. There are two data sets that will be used: Team Results and Public Picks. Let’s start with the simpler one: the Public Picks data set contains the percentage of people who picked the team to win game in the rounds 64, 32, 16, 8, final 4, and finals for the 2024 year.\nThe second data set is Team Results, and contains data from 2008-2023. This data set contains more variables, such as PAKE (performance against Komputer expectations) and PASE (Performance against seed expectations), along with total historical games teams have played in the tournament as well as how often they have made top 64, 32, 16, 8, 4, finals, and champion. There are also a couple of indicator variables, such as f4percent and champpercent, which notes likelihood of a team getting at least 1 final four or at least 1 championship."
+  },
+  {
+    "objectID": "index.html#question-1",
+    "href": "index.html#question-1",
+    "title": "Project Title",
+    "section": "Question 1:",
+    "text": "Question 1:\nHow well does past performance from 2008-2023 correlate with predictions for the 2024 tournament?"
+  },
+  {
+    "objectID": "index.html#analysis",
+    "href": "index.html#analysis",
+    "title": "Project Title",
+    "section": "Analysis",
+    "text": "Analysis"
   }
 ]
