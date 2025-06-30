@@ -1,0 +1,17 @@
+{
+  "hash": "431f30c3f394be68161c9db28b3f3ece",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Project Title\"\nsubtitle: \"INFO 526 - Summer 2025 - Final Project\"\nauthor: \n  - name: \"Matt Osterhoudt\"\n    affiliations:\n      - name: \"School of Information, University of Arizona\"\ndescription: \"This project will examine past NCAA Men's March Madness data in order to develop key insights and predictions utilizing data visualization through plot creation/interpretation\"\nformat:\n   html:\n    code-tools: true\n    code-overflow: wrap\n    embed-resources: true\neditor: visual\nexecute:\n  warning: false\n  echo: false\n---\n\n::: {.cell}\n\n:::\n\n\n\n\n\n## Introduction\n\nMarch madness is the NCAA Division 1 annual basketball tournament. It is single-elimination based tournament, and the data I will be using is from 2008-2024. 2020 is not included because of Covid. There are two data sets that will be used: Team Results and Public Picks. Let's start with the simpler one: the Public Picks data set contains the percentage of people who picked the team to win game in the rounds 64, 32, 16, 8, final 4, and finals for the 2024 year.\n\nThe second data set is Team Results, and contains data from 2008-2023. This data set contains more variables, such as PAKE (performance against Komputer expectations) and PASE (Performance against seed expectations), along with total historical games teams have played in the tournament as well as how often they have made top 64, 32, 16, 8, 4, finals, and champion. There are also a couple of indicator variables, such as f4percent and champpercent, which notes likelihood of a team getting at least 1 final four or at least 1 championship.\n\n## Question 1: \n\n**How well does past performance from 2008-2023 correlate with predictions for the 2024 tournament?**\n\n## Question 1 Introduction\n\n## Question 1 Approach\n\n## Question 1 Analysis\n\n\n\n\n::: {.cell layout-align=\"center\"}\n::: {.cell-output-display}\n![](index_files/figure-html/load-dataset-1.png){fig-align='center' width=2100}\n:::\n\n::: {.cell-output-display}\n![](index_files/figure-html/load-dataset-2.png){fig-align='center' width=2100}\n:::\n:::\n\n\n\n## Question 1 Discussion\n\n## Question 2:\n\n**something something?**\n\n## Question 2 Introduction\n\n## Question 2 Approach\n\n## Question 2 Analysis\n\n\n\n\n::: {.cell layout-align=\"center\"}\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-1.png){fig-align='center' width=2100}\n:::\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-2.png){fig-align='center' width=2100}\n:::\n:::\n\n\n\n\n\n\n## Question 2 Discussion",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

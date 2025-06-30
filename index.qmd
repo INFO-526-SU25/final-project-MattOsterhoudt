@@ -91,7 +91,7 @@ team_results <- team_results |>
                     )
   )
 
-team_results
+#team_results
 
 # Using a join, selecting teams that appear in public_picks and team results
 combined_data <- team_results |>
@@ -106,7 +106,7 @@ combined_data <- combined_data |>
     delta_f4 = public_f4_percentage - historical_f4_percentage
   )
 
-combined_data
+#combined_data
 
 # First Plot: Scatterplot
 ggplot(combined_data, aes(x = historical_f4_percentage, y = public_f4_percentage, color = pase_quant)) +
@@ -133,17 +133,35 @@ ggplot(combined_data, aes(x = historical_f4_percentage, y = public_f4_percentage
     panel.grid.minor = element_blank(),
     plot.title = element_text(face = "bold", size = 12),
     axis.title = element_text(size = 10),
-    plot.subtitle = element_text(size = 10)
+    plot.subtitle = element_text(size = 10),
+    plot.caption = element_text(hjust = 1,
+                                face = "italic",
+                                size = 6)
   ) 
-  
+
+# Second plot: Density Ridge
 ggplot(combined_data, aes(
      x = delta_f4, y = pase_quant, fill = pase_quant
    )) +
   geom_density_ridges(alpha = 0.8, scale = 1.2) +
   geom_vline(xintercept = 0, linetype = "dashed") +
-  labs(x="Public – Hist F4%", y="PASE Quartile") +
+  scale_x_continuous(
+    name = "Final 4: Public predictions minus Historic (%)",
+    labels = percent_format(scale = 1),
+    breaks = seq(-100, 40, by = 20)
+  ) +
+  labs(
+       y = "PASE Quartile",
+       title = "Final 4 Density Ridge Plot:\nPASE Quartiles vs. Public - Historic (%Δ)",
+       caption = "Source: TidyTuesday") +
   theme_ridges() +
-  theme(legend.position = "none")
+  theme(
+    legend.position = "none",
+    panel.grid.major.y = element_blank(),
+    plot.caption = element_text(hjust = 1,
+                                face = "italic",
+                                size = 6) 
+    )
 
 
 
