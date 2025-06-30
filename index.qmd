@@ -15,10 +15,9 @@ editor: visual
 execute:
   warning: false
   echo: false
-  output: false
 ---
 
-```{r}
+```{r setup}
 # set theme for ggplot2
 ggplot2::theme_set(ggplot2::theme_minimal(base_size = 14))
 
@@ -40,7 +39,10 @@ if(!require(pacman))
 pacman::p_load(tidyverse,
                janitor,
                ggrepel,
-               ggforce)
+               ggforce,
+               here,
+               scales,
+               ggridges)
 
 devtools::install_github("tidyverse/dsbox")
 
@@ -58,12 +60,15 @@ The second data set is Team Results, and contains data from 2008-2023. This data
 
 **How well does past performance from 2008-2023 correlate with predictions for the 2024 tournament?**
 
+## Question 1 Introduction
 
-## Analysis
+## Question 1 Approach
+
+## Question 1 Analysis
 
 ```{r}
 #| label: load-dataset
-#| message: false
+
 
 team_results <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-26/team-results.csv') |>
   clean_names()
@@ -76,7 +81,6 @@ public_picks <- public_picks |>
 
 # Computes the quantile breakpoints
 pase_quantile <- quantile(team_results$pase, probs = c(0.25, 0.50, 0.75), na.rm = TRUE)
-pase_quantile
 
 # Computes historical top 4 percentage and also the quantile labels based on breakpoint.
 team_results <- team_results |>
@@ -84,8 +88,9 @@ team_results <- team_results |>
     historical_f4_percentage = f4 / r64 * 100,
     pase_quant = cut(pase, breaks = c(-Inf, pase_quantile, +Inf), labels = c("Q1", "Q2", "Q3", "Q4"),
                      right = TRUE
-                     )
+                    )
   )
+
 team_results
 
 # Using a join, selecting teams that appear in public_picks and team results
@@ -103,34 +108,150 @@ combined_data <- combined_data |>
 
 combined_data
 
+# First Plot: Scatterplot
 ggplot(combined_data, aes(x = historical_f4_percentage, y = public_f4_percentage, color = pase_quant)) +
-  geom_point(size = 2, alpha = 0.8) +
+  geom_point(size = 2.5, alpha = .7, shape = 21, fill = "white", stroke = 1) +
   facet_zoom(
-              xlim = c(0,20), 
-              ylim = c(0,10), 
+              xlim = c(0,30), 
+              ylim = c(0,20), 
               zoom.size = 1) +
   coord_cartesian(ylim = c(0, 50)) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
-  scale_x_continuous("Historical Final Four %", labels = scales::percent_format(scale = 1)) +
-  scale_y_continuous("2024 Public-Picks Final Four %", labels = scales::percent_format(scale = 1)) +
+  scale_x_continuous("Historical Final Four (2008-2023)", labels = scales::percent_format(scale = 1)) +
+  scale_y_continuous("Public Final Four Predictability (2004)", labels = scales::percent_format(scale = 1)) +
+  scale_color_manual( name = "PASE by Quartile", values = c(
+  "Q1" = "darkgreen", "Q2" = "blue", "Q3" = "purple", "Q4" = "red")) +
   labs(
-    title = "Past Final Four % vs. Public-Pick % (2025)",
-    color = "PASE Quartile"
-  ) +
-  theme_minimal()
-
-
-ggplot(combined_data, aes(x = pase_quant, y = delta_f4, fill = pase_quant)) +
-  geom_hline(yintercept = 0, color = "gray60") +
-  geom_boxplot(alpha = 0.6, outlier.color = "red") +
-  geom_jitter(width = 0.2, alpha = 0.5, size = 1) +
-  scale_y_continuous("Public F4% – Historical F4%", labels = scales::percent_format(scale = 1)) +
-  labs(
-    title = "Over- or Under-Estimation of Final-Four Chances by PASE Quartile",
-    x = "PASE Quartile"
+    title = "NCAA March Madness: Historic Final 4 Appearances vs Public Final Four Predictions",
+    color = "PASE Quartile",
+    caption = "Source: TidyTuesday",
+    subtitle = "Left Panel shows a zoomed-in view"
   ) +
   theme_minimal() +
+  theme(
+    panel.grid.major = element_line(color = "gray90"),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 12),
+    axis.title = element_text(size = 10),
+    plot.subtitle = element_text(size = 10)
+  ) 
+  
+ggplot(combined_data, aes(
+     x = delta_f4, y = pase_quant, fill = pase_quant
+   )) +
+  geom_density_ridges(alpha = 0.8, scale = 1.2) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(x="Public – Hist F4%", y="PASE Quartile") +
+  theme_ridges() +
   theme(legend.position = "none")
 
 
+
+
 ```
+## Question 1 Discussion
+
+## Question 2:
+
+**something something?**
+
+## Question 2 Introduction
+
+## Question 2 Approach
+
+## Question 2 Analysis
+
+```{r}
+# Read in matchup data
+matchups_by_year <-read_csv(here("data", "combined.csv")) 
+
+# Filters the data to 2000-2024, computes upset, seed difference, and 4-year range
+upsets_data <- matchups_by_year |>
+  filter(year >= 2000, year <= 2024) |>
+  mutate(
+    round_of = factor(round_of, levels = c("64", "32", "16", "8", "4", "2")),
+    upset = winning_team_seed > losing_team_seed,
+    seed_difference = winning_team_seed - losing_team_seed,
+    four_year_range = case_when(
+      year <= 2004 ~ "2000-2003",
+      year <= 2007 ~ "2004-2007",
+      year <= 2011 ~ "2008-2011",
+      year <= 2015 ~ "2012-2015",
+      year <= 2020 ~ "2016-2020",
+      TRUE ~ "2021-2024"
+    ) |> 
+      fct_relevel("2000-2003", "2004-2007", "2008-2011",
+                  "2012-2015", "2016-2020", "2021-2024")
+  )
+    
+#view(upsets_data)
+
+# Groups data by four year range, round, and calculates upset percentage.
+heatmap_data <- upsets_data |>
+  group_by(four_year_range, round_of) |>
+  summarize(upset_percentage = mean(upset) * 100, .groups = "drop")
+
+#view(heatmap_data)
+            
+ggplot(heatmap_data, aes(x = four_year_range, y = round_of, fill = upset_percentage)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = percent(upset_percentage/100)),
+            color = ifelse(heatmap_data$upset_percentage >= "40", "black", "white"), size = 3) +
+  scale_fill_viridis_c(
+    name = "% Upsets",
+    option = "D",
+    direction = 1) +
+  labs(
+    y = "Teams left per round",
+    x = "4-year Range",
+    title = "Frequency of Upsets by Round and 4 year range",
+    caption = "Note: 2020 contains no data due to COVID\nSource: https://github.com/shoenot/march-madness-games-csv"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    plot.caption = element_text(hjust = 1,
+                                face = "italic",
+                                size = 6)
+    )
+
+# Filters by the upset value, and I also decided to remove top 4 and 2. Was not adding much visually.          
+box_plot_data <- upsets_data |>
+  filter(upset, round_of %in% c("64", "32", "16", "8"))
+
+round_label <- c(
+  "64" = "64 teams left",
+  "32" = "32 teams left",
+  "16" = "16 teams left",
+  "8" = "8 teams left"
+)
+
+ggplot(box_plot_data, aes(x = four_year_range, y = seed_difference, fill = four_year_range)) +
+  geom_boxplot(alpha = 0.7) +
+  stat_boxplot(geom = "errorbar", width = 0.5, color = "black") +
+  coord_flip() +
+  facet_wrap(~ round_of, ncol = 2, labeller = labeller(round_of = round_label)) +
+  labs(
+    y = "Seed Difference\n(Seed of winner minus loser)",
+    x = "4-year range",
+    title = "Upset Magnitudes by 4-year time range & Bracket",
+    caption = "Note: 2020 contains no data due to COVID\nSource: https://github.com/shoenot/march-madness-games-csv"
+  ) + 
+  scale_y_continuous(breaks = seq(0, 12, by = 4), limits = c(0, 15)) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.caption = element_text(hjust = 1,
+                                face = "italic",
+                                size = 6)
+  )
+
+
+
+
+```
+
+
+
+## Question 2 Discussion
