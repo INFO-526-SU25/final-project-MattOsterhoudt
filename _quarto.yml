@@ -13,7 +13,7 @@ website:
       - text: Proposal
         href: proposal.qmd
       - text: Presentation
-        href: presentation.qmd
+        href: https://docs.google.com/presentation/d/1OMgenjV1c3qEKUSkS8oIu3XjEukESmRf_I0kQZBuQQQ/edit?usp=sharing
       - text: About
         href: about.qmd
 
