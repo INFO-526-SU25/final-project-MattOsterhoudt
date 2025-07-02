@@ -42,27 +42,34 @@ pacman::p_load(tidyverse,
                ggforce,
                here,
                scales,
-               ggridges)
+               ggridges,
+               kableExtra)
 
 devtools::install_github("tidyverse/dsbox")
 
 library(tidyverse)
 ```
 
-
 ## Introduction
 
-March madness is the NCAA Division 1 annual basketball tournament. It is single-elimination based tournament, and the data I will be using is from 2008-2024. 2020 is not included because of Covid. There are two data sets that will be used: Team Results and Public Picks. Let's start with the simpler one: the Public Picks data set contains the percentage of people who picked the team to win game in the rounds 64, 32, 16, 8, final 4, and finals for the 2024 year.
+March madness is the NCAA Division 1 annual basketball tournament. It is single-elimination based tournament, and the data I will be using ranges from 200-2024. 2020 is not included because of Covid. There are two data sets that will be used: Team Results and Public Picks. Let's start with the simpler one: the Public Picks data set contains the percentage of people who picked the team to win game in the rounds 64, 32, 16, 8, final 4, and finals for the 2024 year.
 
-The second data set is Team Results, and contains data from 2008-2023. This data set contains more variables, such as PAKE (performance against Komputer expectations) and PASE (Performance against seed expectations), along with total historical games teams have played in the tournament as well as how often they have made top 64, 32, 16, 8, 4, finals, and champion. There are also a couple of indicator variables, such as f4percent and champpercent, which notes likelihood of a team getting at least 1 final four or at least 1 championship.
+The second data set is Team Results, and contains data from 2008-2023. This data set contains more variables, such as PAKE (performance against Komputer expectations) and PASE (Performance against seed expectations), along with total historical games teams have played in the tournament as well as how often they have made top 64, 32, 16, 8, 4, finals, and champion. There are also a couple of indicator variables, such as f4percent and champpercent, which notes likelihood of a team getting at least 1 final four or at least 1 championship. Another data set that will be used is "matchup_by_year", which takes the matchup data, seed, and score difference by bracket round and year.
 
-## Question 1: 
-
-**How well does past performance from 2008-2023 correlate with predictions for the 2024 tournament?**
+## Question 1:
+**How well does past tournament performance from 2008-2023 correlate with predictions for the 2024 tournament?**
 
 ## Question 1 Introduction
 
+My hypothesis for this question: Past team performance has little to no correlation with predictions for the 2024 tournament. I am interested to find out if there is any sort of correlation with how well a team has historically done in the tournament and public predictions. It's well known that most public pick results are determined by a wide range of more obvious factors, such as season standings, seeding, ...the list goes on. By visually analyzing the potential relationship between past performance and predictions, I hope to shed light on this as a potential indicator for tournament predictions.
+
+The parts of the data I will be using from the public_picks data set is the f4 (public final four prediction percentage) variable. This variable, in conjunction with the team_results variables f4 and r64 variables (used to compute historic final 4 rates) will be our first measure in correlation. I will also use another variable, PASE (Performance Against Seed Expectations) to determine how public sentiment may or may not deviate from historical data, based on team quality.
+
 ## Question 1 Approach
+
+For the first plot, I chose a simple scatter plot fitted with a linear regression model. The scatter plot allows us to visualize the spread of data points. With a linear trend line, we can also determine if there is a positive or negative relationship between historic final four data and public final four prediction rates. A scatter plot also allows us to use color to differentiate between the categorical PASE data, in which we will examine potential trends.
+
+For the second plot, I chose to use a density ridge plot. The goal here is to find public prediction deviations across team quality by tier, which is why PASE will be used and categorized into tiered quartiles. I like that the density ridge allows us to stack the quartile distribution, which allows us to easily notice any data skew, spread, and/or outliers. 
 
 ## Question 1 Analysis
 
@@ -140,9 +147,7 @@ ggplot(combined_data, aes(x = historical_f4_percentage, y = public_f4_percentage
   ) 
 
 # Second plot: Density Ridge
-ggplot(combined_data, aes(
-     x = delta_f4, y = pase_quant, fill = pase_quant
-   )) +
+ggplot(combined_data, aes(x = delta_f4, y = pase_quant, fill = pase_quant)) +
   geom_density_ridges(alpha = 0.8, scale = 1.2) +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_x_continuous(
@@ -167,15 +172,27 @@ ggplot(combined_data, aes(
 
 
 ```
+
 ## Question 1 Discussion
 
-## Question 2:
+Teams with higher rate of final four appearances (from 2008-2023) appear to also receive higher public prediction rates. The scatter plot reveals a positive trend between the two. Past performance, therefore, may be considered as a guide for public sentiment. The outlier points are another thing to consider, and is most most likely why the linear regression line was as steep as it was. Without these outliers, as seen in the zoomed in plot, there is still a positive trend, although weaker in magnitude. 
 
-**something something?**
+Also, the density ridge plot revealed a little about how well the public predicts team by PASE ratings. A lot of the data spread was in the middle, with a few trends to the right (overestimating performance), but more to left (underestimating performance). This implies that the public tends to underestimate teams more often, especially teams with higher PASE ratings. However, the data is only limited to 2003-2008, and was only utilized for 2024 predictions. The analysis lacks any sort of trend over time.
+
+## Question 2:
+**Are lower-seeded teams winning more frequently over time, and if so, by what level of magnitude?**
 
 ## Question 2 Introduction
 
+Hypothesis: Overtime, there have been more upsets in the NCAA tournaments, with an increasing level of magnitude. This question utilizes a new data set called "matchups_by_year", which contains tabular data on every single matchup in the tournament, by year. To answer this question, I will be using the seed column, year column, and round column to compute additional data. Using these variables, I should be able to examine if any trends exist.
+
+I am interested in answering this question because of the nature of game upsets; it goes against expectations for 16th seeded teams to defeat 1st seed teams, but it happens anyway. Analyzing this relationship is very useful to make NcAA tournament predictions. For morally ambiguous reasons, there are many out there who utilize such data when making sports bets. If there is a higher level of upset variance over time as hypothesized, then this would affect betting outcomes and the level of risk.
+
 ## Question 2 Approach
+
+For the first plot, I chose to use a tiled heat-map plot. The color spread of a heat map depicts the frequency of upsets by round, and it's also very useful to show what is happening round by round over time. I combined years into blocks of four in order to determine the rate of upsets per "era". The frequency of upsets by round was computed by simply converting upsets into a boolean, then calculating the mean over a 4 year period.
+
+For the second plot, I chose a box and whisker plot to depict upset magnitude, again by bracket and 4-year blocks. A box plot will strategically measure the distribution of seed difference over our time era ranges (2000-2024, in blocks of 4 years). For this plot, I calculated the seed difference and filtered by upset, returning only teams that had an upset and converting seed difference to a positive value.
 
 ## Question 2 Analysis
 
@@ -228,7 +245,6 @@ ggplot(heatmap_data, aes(x = four_year_range, y = round_of, fill = upset_percent
   theme_minimal() +
   theme(
     panel.grid = element_blank(),
-    legend.position = "none",
     plot.caption = element_text(hjust = 1,
                                 face = "italic",
                                 size = 6)
@@ -244,6 +260,8 @@ round_label <- c(
   "16" = "16 teams left",
   "8" = "8 teams left"
 )
+
+view(box_plot_data)
 
 ggplot(box_plot_data, aes(x = four_year_range, y = seed_difference, fill = four_year_range)) +
   geom_boxplot(alpha = 0.7) +
@@ -269,7 +287,5 @@ ggplot(box_plot_data, aes(x = four_year_range, y = seed_difference, fill = four_
 
 
 ```
-
-
 
 ## Question 2 Discussion
