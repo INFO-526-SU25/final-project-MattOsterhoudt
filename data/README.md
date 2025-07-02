@@ -44,6 +44,17 @@ Public Picks Data
 - F4:	The percent of people who picked the team to win the game in the Final 4.
 - FINALS:	The percent of people who picked the team to win the game in the Finals.
 
+Matchup Data
+
+- year: Tournament year
+- round_of: Teams left per round
+- winning_team_name: Name of winning team
+- winning_team_seed: Seed number of winning team
+- losing_team_name: Name of losing team
+- losing_team_seed: Seed number of losing team
+- losing_team_score: Losing team's score
+- winning_team_score: Winning team's score
+
 
 
 
@@ -85,3 +96,14 @@ Public Picks Data
 - E8:	character
 - F4:	character
 - FINALS:	character
+
+Matchup Data
+
+- year: integer
+- round_of: integer
+- winning_team_name: character
+- winning_team_seed: integer
+- losing_team_name: character
+- losing_team_seed: integer
+- losing_team_score: integer
+- winning_team_score: integer
