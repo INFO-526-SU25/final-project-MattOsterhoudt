@@ -1,11 +1,11 @@
 ---
-title: "Project Title"
+title: "Men's NCAA March Madness Tournament Analysis"
 subtitle: "INFO 526 - Summer 2025 - Final Project"
 author: 
   - name: "Matt Osterhoudt"
     affiliations:
       - name: "School of Information, University of Arizona"
-description: "This project will examine past NCAA Men's March Madness data in order to develop key insights and predictions utilizing data visualization through plot creation/interpretation"
+description: "This project will examine past NCAA Men's March Madness data in order to develop key insights and predictions utilizing data visualization through plot creation/interpretation."
 format:
    html:
     code-tools: true
@@ -56,7 +56,7 @@ March madness is the NCAA Division 1 annual basketball tournament. It is single-
 
 The second data set is Team Results, and contains data from 2008-2023. This data set contains more variables, such as PAKE (performance against Komputer expectations) and PASE (Performance against seed expectations), along with total historical games teams have played in the tournament as well as how often they have made top 64, 32, 16, 8, 4, finals, and champion. There are also a couple of indicator variables, such as f4percent and champpercent, which notes likelihood of a team getting at least 1 final four or at least 1 championship. Another data set that will be used is "matchup_by_year", which takes the matchup data, seed, and score difference by bracket round and year.
 
-## Question 1:
+## Question 1: NCAA March Madness Tournament Analysis
 **How well does past tournament performance from 2008-2023 correlate with predictions for the 2024 tournament?**
 
 ## Question 1 Introduction
@@ -179,7 +179,7 @@ Teams with higher rate of final four appearances (from 2008-2023) appear to also
 
 Also, the density ridge plot revealed a little about how well the public predicts team by PASE ratings. A lot of the data spread was in the middle, with a few trends to the right (overestimating performance), but more to left (underestimating performance). This implies that the public tends to underestimate teams more often, especially teams with higher PASE ratings. However, the data is only limited to 2003-2008, and was only utilized for 2024 predictions. The analysis lacks any sort of trend over time.
 
-## Question 2:
+## Question 2: NCAA March Madness Tournament Analysis 
 **Are lower-seeded teams winning more frequently over time, and if so, by what level of magnitude?**
 
 ## Question 2 Introduction
@@ -192,7 +192,7 @@ I am interested in answering this question because of the nature of game upsets;
 
 For the first plot, I chose to use a tiled heat-map plot. The color spread of a heat map depicts the frequency of upsets by round, and it's also very useful to show what is happening round by round over time. I combined years into blocks of four in order to determine the rate of upsets per "era". The frequency of upsets by round was computed by simply converting upsets into a boolean, then calculating the mean over a 4 year period.
 
-For the second plot, I chose a box and whisker plot to depict upset magnitude, again by bracket and 4-year blocks. A box plot will strategically measure the distribution of seed difference over our time era ranges (2000-2024, in blocks of 4 years). For this plot, I calculated the seed difference and filtered by upset, returning only teams that had an upset and converting seed difference to a positive value.
+For the second plot, I chose a box and whisker plot to depict upset magnitude, again by bracket and 4-year blocks. A box plot will strategically measure the distribution of seed difference over our time era ranges (2000-2024, in blocks of 4 years). For this plot, I calculated the seed difference and filtered by upset, returning matchups that had an upset and converting seed difference to a positive value. I decided to visually display the first 4 rounds (64, 32, 16, and 8 teams left) and also keep the 4-year range.
 
 ## Question 2 Analysis
 
@@ -208,7 +208,7 @@ upsets_data <- matchups_by_year |>
     upset = winning_team_seed > losing_team_seed,
     seed_difference = winning_team_seed - losing_team_seed,
     four_year_range = case_when(
-      year <= 2004 ~ "2000-2003",
+      year <= 2003 ~ "2000-2003",
       year <= 2007 ~ "2004-2007",
       year <= 2011 ~ "2008-2011",
       year <= 2015 ~ "2012-2015",
@@ -261,7 +261,7 @@ round_label <- c(
   "8" = "8 teams left"
 )
 
-view(box_plot_data)
+#view(box_plot_data)
 
 ggplot(box_plot_data, aes(x = four_year_range, y = seed_difference, fill = four_year_range)) +
   geom_boxplot(alpha = 0.7) +
@@ -282,10 +282,10 @@ ggplot(box_plot_data, aes(x = four_year_range, y = seed_difference, fill = four_
                                 face = "italic",
                                 size = 6)
   )
-
-
-
-
 ```
 
 ## Question 2 Discussion
+
+Based on the results of the heatmap tile plot from 2000-2024, it would appear upsets are occurring more frequently. With 64 teams (the start of the tournament), we can see a small increase in upset frequency over the course of time. The data is indeed richer with 64 teams left, and the trend looks less clear cut as the teams left per round decrease. There are a few notable spikes in upset frequency, especially mid-tournament with 8 teams remaining. Overall, it would appear that in earlier rounds (64, 32, and 16 teams left), upsets are occurring more frequently over time. However, as better teams make it farther in the tournament, such as final 4 and 2, the upset frequency has significantly decreased.
+
+Next, the boxplot measures the magnitude of upsets. This was computed by subtracting the seed difference by matchups, filtered by upsets. I also decided to exclude final 4 and 2 from this visualization. As seen in this visual, first round matchups over the years have seen a lot more volatility with extreme outliers: There are a lot more 16th seed and 15th seed victories in recent times, implying higher upset magnitude. Examining the median and whisker lengths by round over the years seems to reveal a trend: recently, there have been larger upsets with higher variability. By bracket, this upset variability steadily decreases.
