@@ -198,7 +198,7 @@ For the second plot, I chose a box and whisker plot to depict upset magnitude, a
 
 ```{r}
 # Read in matchup data
-matchups_by_year <-read_csv(here("data", "combined.csv")) 
+matchups_by_year <-read_csv(here("data", "matchup_data.csv")) 
 
 # Filters the data to 2000-2024, computes upset, seed difference, and 4-year range
 upsets_data <- matchups_by_year |>
