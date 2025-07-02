@@ -129,7 +129,7 @@ ggplot(combined_data, aes(x = historical_f4_percentage, y = public_f4_percentage
   scale_color_manual( name = "PASE by Quartile", values = c(
   "Q1" = "darkgreen", "Q2" = "blue", "Q3" = "purple", "Q4" = "red")) +
   labs(
-    title = "NCAA March Madness: Historic Final 4 Appearances vs Public Final Four Predictions",
+    title = "NCAA March Madness:\nHistoric Final 4 Appearances vs Public Final Four Predictions",
     color = "PASE Quartile",
     caption = "Source: TidyTuesday",
     subtitle = "Left Panel shows a zoomed-in view"
