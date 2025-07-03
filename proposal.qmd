@@ -58,8 +58,8 @@ Make sure to load the data and use inline code for some of this information.
 
 ## Questions
 
-1.  Does a team's overall popularity have any correlation to its success in March Madness?
-2.   How do public predictions vary across the tournament based on experienced teams?
+1.  How well does past tournament performance from 2008-2023 correlate with predictions for the 2024 tournament? My hypothesis for this question: Past team performance has little to no correlation with predictions for the 2024 tournament.
+2.  Overtime, there have been more upsets in the NCAA tournaments, with an increasing level of magnitude.
 
 ## Analysis plan
 
@@ -67,7 +67,7 @@ Make sure to load the data and use inline code for some of this information.
     -   <div>
 
         1.  Using the team_results data, I will be using the variables wins (w), win percentage (win), and other indicators of tournament advancement (r64, champ, etc.).
-        2.  Using the public_picks data, I will use the cross reference the data from team_results_data and compare the percent of people who picked the team to win finals, final 4, etc. All of those (finals, f4, e8, etc.) are variable names as a percent character.
+        2.  Using the public_picks data, I will use the cross reference the data from team_results_data and compare the percent of people who picked the team to win finals, final 4, etc. All of those (finals, f4, e8, etc.) are variable names as a percent character. Kepe in mind, public picks data only shows the 64 teams that are in the 2024 tournament. The team results data set will be filtered to only match teams that are in the 2024 tournament.
         3.  I will clean the data by converting character columns to numeric, and also merge both data sets in order to match their round-specific data points for the visualization.
         4.  I will create a new variable that determines the "overall" public popularity. I can do this by creating a new variable that computes the mean of pick percentages. Alternatively, I can compute a weighted score using a mathematical point model system that weighs later rounds as more valuable.
         5.  Finally, I will develop the visualization. I have not decided yet, but I am leaning towards using a histogram, box plot, or scatter plot with a linear regression model.
@@ -79,9 +79,8 @@ Make sure to load the data and use inline code for some of this information.
 -   Question 2
     -   <div>
 
-        1.  Using the team_results data, I will convert the amount of games played by teams into a categorical variable. This variable will be called "Experience level" and will be categorized as low, high, and medium (I may adjust this later).
-        2.  Using the public_picks data, I will revisit the round percentage popularity and compute the variability (using range, standard deviations, mean, etc.)
-        3.  Using the new variables and data, merge the data sets and prepare for visualization.
-        4.  Utilize statistical testing and plot data to draw conclusions and interpretation
+        1.  Using the new data set, matchup_data, I will examine past results from 2000-2024 in order to determine if upsets are happening more frequently over time, and if their magnitude is meaningful
+        2.  Compute upset variable by utilizing a boolean. Upset will be a 1, and no upset will be a 0. Filter the dataset based on only upsets. Next, I will subtract the seed difference by matchup, filtered by upset. This will allow me to acuire the magnitude of the upsets.
+        3.  Utilize statistical testing and plot data to draw conclusions and interpretation. I plan to use a heatmap tile plot, and a box and whisker plot
 
         </div>
