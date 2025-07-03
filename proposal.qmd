@@ -66,8 +66,8 @@ Make sure to load the data and use inline code for some of this information.
 -   Question 1
     -   <div>
 
-        1.  Using the team_results data, I will be using the variables wins (w), win percentage (win), and other indicators of tournament advancement (r64, champ, etc.).
-        2.  Using the public_picks data, I will use the cross reference the data from team_results_data and compare the percent of people who picked the team to win finals, final 4, etc. All of those (finals, f4, e8, etc.) are variable names as a percent character. Kepe in mind, public picks data only shows the 64 teams that are in the 2024 tournament. The team results data set will be filtered to only match teams that are in the 2024 tournament.
+        1.  Using the team_results data, I will be using the f4 (final four percentage), r64(number of games at 64 teams), and PASE (Performance Against Seed Expectations). These variables will be used to examine how often a team consistently makes top 4
+        2.  Using the public_picks data, I will use the cross reference the data from team_results_data and compare the percent of people who picked the team to make final 4. This variable name is a percent character. Keep in mind, public picks data only shows the 64 teams that are in the 2024 tournament. The team results data set will be filtered to only match teams that are in the 2024 tournament.
         3.  I will clean the data by converting character columns to numeric, and also merge both data sets in order to match their round-specific data points for the visualization.
         4.  I will create a new variable that determines the "overall" public popularity. I can do this by creating a new variable that computes the mean of pick percentages. Alternatively, I can compute a weighted score using a mathematical point model system that weighs later rounds as more valuable.
         5.  Finally, I will develop the visualization. I have not decided yet, but I am leaning towards using a histogram, box plot, or scatter plot with a linear regression model.
